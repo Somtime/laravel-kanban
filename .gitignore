@@ -1,0 +1,28 @@
+# Common
+.DS_Store
+node_modules/
+dist/
+vendor/
+.env
+
+# Backend specific
+backend/storage/*.key
+backend/storage/framework/cache/data/*
+backend/storage/framework/sessions/*
+backend/storage/framework/testing/*
+backend/storage/framework/views/*
+backend/storage/logs/*.log
+backend/public/storage
+backend/public/hot
+backend/.phpunit.result.cache
+
+# Frontend specific
+frontend/node_modules
+frontend/dist
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
