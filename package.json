@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev": "npm run dev:frontend",
     "dev:frontend": "cd frontend && npm run dev",
-    "dev:backend": "cd backend && php artisan serve",
+    "dev:backend": "echo 'Backend is running in Docker. Use [docker compose up -d] if not started.'",
     "install:frontend": "cd frontend && npm install",
     "install:backend": "cd backend && composer install",
     "install:all": "npm run install:frontend && npm run install:backend",

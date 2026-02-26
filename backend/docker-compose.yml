@@ -1,3 +1,4 @@
+name: laravel-kanban
 services:
   # PHP-FPM 애플리케이션
   laravel-test-app:
