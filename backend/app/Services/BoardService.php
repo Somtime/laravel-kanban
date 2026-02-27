@@ -7,6 +7,7 @@ use App\Models\Team;
 use App\Models\User;
 use App\Models\Board;
 use App\Repositories\BoardRepository;
+use App\Exceptions\UnauthorizedAccessException;
 
 class BoardService
 {
@@ -20,7 +21,7 @@ class BoardService
     public function checkMemberAccess(Team $team, User $user): void
     {
         if (!$team->users()->where('users.id', $user->id)->exists()) {
-            abort(403, '권한이 없습니다.');
+            throw new UnauthorizedAccessException('팀 멤버가 아니므로 권한이 없습니다.');
         }
     }
 
@@ -31,7 +32,7 @@ class BoardService
     {
         $role = $team->users()->where('users.id', $user->id)->first()?->pivot->role;
         if (!in_array($role, ['owner', 'manager'])) {
-            abort(403, '팀 소유자나 매니저만 보드를 관리할 수 있습니다.');
+            throw new UnauthorizedAccessException('팀 소유자나 매니저만 보드를 관리할 수 있습니다.');
         }
     }
 

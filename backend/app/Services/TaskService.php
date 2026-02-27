@@ -10,6 +10,7 @@ use App\Models\Column;
 use App\Models\Task;
 use App\Models\User;
 use App\Repositories\TaskRepository;
+use App\Exceptions\UnauthorizedAccessException;
 use Illuminate\Support\Facades\DB;
 
 class TaskService
@@ -25,7 +26,7 @@ class TaskService
     {
         $exists = $board->team->users()->where('users.id', $user->id)->exists();
         if (!$exists) {
-            abort(403, '팀 멤버만 태스크를 제어할 수 있습니다.');
+            throw new UnauthorizedAccessException('팀 멤버만 태스크를 제어할 수 있습니다.');
         }
     }
 

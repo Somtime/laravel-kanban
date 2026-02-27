@@ -8,6 +8,7 @@ use App\Models\Board;
 use App\Models\Column;
 use App\Models\User;
 use App\Repositories\ColumnRepository;
+use App\Exceptions\UnauthorizedAccessException;
 
 class ColumnService
 {
@@ -22,7 +23,7 @@ class ColumnService
     {
         $role = $board->team->users()->where('users.id', $user->id)->first()?->pivot->role;
         if (!in_array($role, ['owner', 'manager'])) {
-            abort(403, '소유자나 매니저만 컬럼을 관리할 수 있습니다.');
+            throw new UnauthorizedAccessException('소유자나 매니저만 컬럼을 관리할 수 있습니다.');
         }
     }
 
