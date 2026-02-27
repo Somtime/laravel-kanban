@@ -8,7 +8,6 @@ use App\Models\Board;
 use App\Models\Column;
 use App\Models\User;
 use App\Repositories\ColumnRepository;
-use App\Exceptions\UnauthorizedAccessException;
 
 class ColumnService
 {
@@ -17,23 +16,10 @@ class ColumnService
     ) {}
 
     /**
-     * 컬럼 관리 권한 (팀 소유자 또는 매니저) 검사
-     */
-    public function checkManagerAccess(Board $board, User $user): void
-    {
-        $role = $board->team->users()->where('users.id', $user->id)->first()?->pivot->role;
-        if (!in_array($role, ['owner', 'manager'])) {
-            throw new UnauthorizedAccessException('소유자나 매니저만 컬럼을 관리할 수 있습니다.');
-        }
-    }
-
-    /**
      * 새 컬럼 생성
      */
     public function createColumn(Board $board, User $user, ColumnCreateDTO $dto): Column
     {
-        $this->checkManagerAccess($board, $user);
-
         $maxOrder = $this->columnRepository->getMaxOrder($board);
         
         $data = $dto->toArray();
@@ -47,8 +33,6 @@ class ColumnService
      */
     public function updateColumn(Column $column, User $user, ColumnUpdateDTO $dto): Column
     {
-        $this->checkManagerAccess($column->board, $user);
-
         $this->columnRepository->updateColumn($column, $dto->toArray());
 
         // 변경된 내용을 다시 모델에 반영하여 리턴
@@ -60,8 +44,6 @@ class ColumnService
      */
     public function deleteColumn(Column $column, User $user): void
     {
-        $this->checkManagerAccess($column->board, $user);
-
         $this->columnRepository->deleteColumn($column);
     }
 }

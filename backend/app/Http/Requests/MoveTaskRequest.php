@@ -11,7 +11,8 @@ class MoveTaskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; 
+        $task = $this->route('task');
+        return $this->user()->can('move', $task);
     }
 
     /**

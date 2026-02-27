@@ -10,7 +10,6 @@ use App\Models\Column;
 use App\Models\Task;
 use App\Models\User;
 use App\Repositories\TaskRepository;
-use App\Exceptions\UnauthorizedAccessException;
 use Illuminate\Support\Facades\DB;
 
 class TaskService
@@ -20,23 +19,10 @@ class TaskService
     ) {}
 
     /**
-     * 팀 멤버 접근 권한 검사
-     */
-    public function checkTeamMemberAccess(Board $board, User $user): void
-    {
-        $exists = $board->team->users()->where('users.id', $user->id)->exists();
-        if (!$exists) {
-            throw new UnauthorizedAccessException('팀 멤버만 태스크를 제어할 수 있습니다.');
-        }
-    }
-
-    /**
      * 새 태스크 생성
      */
     public function createTask(Column $column, User $user, TaskCreateDTO $dto): Task
     {
-        $this->checkTeamMemberAccess($column->board, $user);
-
         $maxOrder = $this->taskRepository->getMaxOrder($column);
         
         $data = $dto->toArray();
@@ -51,8 +37,6 @@ class TaskService
      */
     public function updateTask(Task $task, User $user, TaskUpdateDTO $dto): Task
     {
-        $this->checkTeamMemberAccess($task->column->board, $user);
-
         $this->taskRepository->updateTask($task, $dto->toArray());
 
         return $task->fresh();
@@ -63,8 +47,6 @@ class TaskService
      */
     public function deleteTask(Task $task, User $user): void
     {
-        $this->checkTeamMemberAccess($task->column->board, $user);
-
         $this->taskRepository->deleteTask($task);
     }
 
@@ -73,8 +55,6 @@ class TaskService
      */
     public function moveTask(Task $task, User $user, TaskMoveDTO $dto): Task
     {
-        $this->checkTeamMemberAccess($task->column->board, $user);
-
         $oldColumnId = (int)$task->column_id;
         $oldOrder = (int)$task->order;
 

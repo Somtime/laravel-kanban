@@ -4,63 +4,48 @@ namespace App\Policies;
 
 use App\Models\Board;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use App\Models\Team;
 
 class BoardPolicy
 {
     /**
-     * Determine whether the user can view any models.
+     * 보드 목록 열람 권한 (팀 멤버인지 확인)
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $user, Team $team): bool
     {
-        return false;
+        return $team->users()->where('users.id', $user->id)->exists();
     }
 
     /**
-     * Determine whether the user can view the model.
+     * 보드 상세 열람 권한 (팀 멤버인지 확인)
      */
     public function view(User $user, Board $board): bool
     {
-        return false;
+        return $this->viewAny($user, $board->team);
     }
 
     /**
-     * Determine whether the user can create models.
+     * 새 보드 생성 권한 (팀의 owner 또는 manager인지 확인)
      */
-    public function create(User $user): bool
+    public function create(User $user, Team $team): bool
     {
-        return false;
+        $role = $team->users()->where('users.id', $user->id)->first()?->pivot->role;
+        return in_array($role, ['owner', 'manager']);
     }
 
     /**
-     * Determine whether the user can update the model.
+     * 보드 수정 권한 (팀의 owner 또는 manager인지 확인)
      */
     public function update(User $user, Board $board): bool
     {
-        return false;
+        return $this->create($user, $board->team);
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * 보드 삭제 권한 (팀의 owner 또는 manager인지 확인)
      */
     public function delete(User $user, Board $board): bool
     {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Board $board): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Board $board): bool
-    {
-        return false;
+        return $this->create($user, $board->team);
     }
 }

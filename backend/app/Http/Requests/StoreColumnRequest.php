@@ -11,7 +11,8 @@ class StoreColumnRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; 
+        $board = $this->route('board');
+        return $this->user()->can('create', [\App\Models\Column::class, $board]);
     }
 
     /**

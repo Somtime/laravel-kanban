@@ -11,7 +11,8 @@ class StoreBoardRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // 권한 체크는 Service 레이어에서 진행
+        $team = $this->route('team');
+        return $this->user()->can('create', [\App\Models\Board::class, $team]);
     }
 
     /**

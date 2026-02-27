@@ -11,7 +11,8 @@ class UpdateColumnRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; 
+        $column = $this->route('column');
+        return $this->user()->can('update', $column);
     }
 
     /**

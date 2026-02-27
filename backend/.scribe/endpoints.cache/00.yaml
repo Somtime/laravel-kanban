@@ -394,7 +394,7 @@ endpoints:
         name: role
         description: ''
         required: false
-        example: member
+        example: owner
         type: string
         enumValues:
           - owner
@@ -405,7 +405,7 @@ endpoints:
         deprecated: false
     cleanBodyParameters:
       email: gbailey@example.net
-      role: member
+      role: owner
     fileParameters: []
     responses: []
     responseFields: []
