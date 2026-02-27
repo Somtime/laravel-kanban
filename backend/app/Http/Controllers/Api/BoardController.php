@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\DTO\BoardCreateDTO;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreBoardRequest;
 use App\Models\Board;
 use App\Models\Team;
 use App\Services\BoardService;
@@ -29,13 +30,9 @@ class BoardController extends Controller
     /**
      * 새 보드 생성
      */
-    public function store(Request $request, Team $team): JsonResponse
+    public function store(StoreBoardRequest $request, Team $team): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
-        $dto = new BoardCreateDTO($validated['name']);
+        $dto = new BoardCreateDTO($request->validated('name'));
         $board = $this->boardService->createBoard($team, $request->user(), $dto);
 
         return response()->json($board, 201);

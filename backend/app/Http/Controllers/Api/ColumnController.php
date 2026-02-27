@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\DTO\ColumnCreateDTO;
 use App\DTO\ColumnUpdateDTO;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreColumnRequest;
+use App\Http\Requests\UpdateColumnRequest;
 use App\Models\Board;
 use App\Models\Column;
 use App\Services\ColumnService;
@@ -20,13 +22,9 @@ class ColumnController extends Controller
     /**
      * 새 컬럼 생성
      */
-    public function store(Request $request, Board $board): JsonResponse
+    public function store(StoreColumnRequest $request, Board $board): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
-        $dto = new ColumnCreateDTO($validated['name']);
+        $dto = new ColumnCreateDTO($request->validated('name'));
         $column = $this->columnService->createColumn($board, $request->user(), $dto);
 
         return response()->json($column, 201);
@@ -35,12 +33,9 @@ class ColumnController extends Controller
     /**
      * 컬럼 수정
      */
-    public function update(Request $request, Column $column): JsonResponse
+    public function update(UpdateColumnRequest $request, Column $column): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'order' => 'sometimes|required|integer|min:0',
-        ]);
+        $validated = $request->validated();
 
         $dto = new ColumnUpdateDTO(
             name: $validated['name'] ?? null,

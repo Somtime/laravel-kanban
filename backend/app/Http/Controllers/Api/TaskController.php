@@ -6,6 +6,9 @@ use App\DTO\TaskCreateDTO;
 use App\DTO\TaskUpdateDTO;
 use App\DTO\TaskMoveDTO;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Requests\MoveTaskRequest;
 use App\Models\Column;
 use App\Models\Task;
 use App\Services\TaskService;
@@ -21,13 +24,9 @@ class TaskController extends Controller
     /**
      * 새 태스크 생성
      */
-    public function store(Request $request, Column $column): JsonResponse
+    public function store(StoreTaskRequest $request, Column $column): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'assignee_id' => 'nullable|exists:users,id',
-        ]);
+        $validated = $request->validated();
 
         $dto = new TaskCreateDTO(
             title: $validated['title'],
@@ -43,13 +42,9 @@ class TaskController extends Controller
     /**
      * 태스크 내용 수정 (제목, 설명, 담당자)
      */
-    public function update(Request $request, Task $task): JsonResponse
+    public function update(UpdateTaskRequest $request, Task $task): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'description' => 'nullable|string',
-            'assignee_id' => 'nullable|exists:users,id',
-        ]);
+        $validated = $request->validated();
 
         $dto = new TaskUpdateDTO(
             title: $validated['title'] ?? null,
@@ -75,12 +70,9 @@ class TaskController extends Controller
     /**
      * 태스크 이동 (드래그 앤 드롭 재정렬 처리)
      */
-    public function move(Request $request, Task $task): JsonResponse
+    public function move(MoveTaskRequest $request, Task $task): JsonResponse
     {
-        $validated = $request->validate([
-            'column_id' => 'required|exists:columns,id',
-            'order' => 'required|integer|min:1',
-        ]);
+        $validated = $request->validated();
 
         $dto = new TaskMoveDTO(
             column_id: (int)$validated['column_id'],
