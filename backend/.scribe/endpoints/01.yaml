@@ -1,0 +1,173 @@
+name: '보드 관리 (Boards)'
+description: |-
+
+  팀 내의 칸반 보드를 관리하는 API입니다.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/teams/{team_id}/boards'
+    metadata:
+      custom: []
+      groupName: '보드 관리 (Boards)'
+      groupDescription: |-
+
+        팀 내의 칸반 보드를 관리하는 API입니다.
+      subgroup: ''
+      subgroupDescription: ''
+      title: '보드 목록 조회'
+      description: |-
+        특정 팀(Team)이 소유한 모든 보드의 목록을 반환합니다.
+        팀에 소속된 멤버만 조회할 수 있습니다.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      team_id:
+        custom: []
+        name: team_id
+        description: 'The ID of the team.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      team_id: 16
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"id": 1, "team_id": 1, "name": "기획 보드", "created_at": "..."}'
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/teams/{team_id}/boards'
+    metadata:
+      custom: []
+      groupName: '보드 관리 (Boards)'
+      groupDescription: |-
+
+        팀 내의 칸반 보드를 관리하는 API입니다.
+      subgroup: ''
+      subgroupDescription: ''
+      title: '새 보드 생성'
+      description: |-
+        해당 팀에 새로운 보드를 추가합니다.
+        팀의 owner 또는 manager 권한이 필요합니다.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      team_id:
+        custom: []
+        name: team_id
+        description: 'The ID of the team.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      team_id: 16
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name: b
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/boards/{board_id}'
+    metadata:
+      custom: []
+      groupName: '보드 관리 (Boards)'
+      groupDescription: |-
+
+        팀 내의 칸반 보드를 관리하는 API입니다.
+      subgroup: ''
+      subgroupDescription: ''
+      title: '보드 상세 조회'
+      description: |-
+        특정 보드의 상세 정보와 더불어 내부의 컬럼(Columns) 및 태스크(Tasks)들을
+        중첩된(Nested) 형태로 한 번에 조회합니다.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      board_id:
+        custom: []
+        name: board_id
+        description: 'The ID of the board.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      board_id: 16
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 500
+        content: '{"error":"Unauthenticated.","code":500}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: 'http://localhost:3000'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

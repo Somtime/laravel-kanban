@@ -1,0 +1,281 @@
+name: '태스크 관리 (Tasks)'
+description: |-
+
+  칸반 보드의 핵심인 태스크(카드)를 생성, 수정, 삭제 및 이동 처리하는 API입니다.
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/columns/{column_id}/tasks'
+    metadata:
+      custom: []
+      groupName: '태스크 관리 (Tasks)'
+      groupDescription: |-
+
+        칸반 보드의 핵심인 태스크(카드)를 생성, 수정, 삭제 및 이동 처리하는 API입니다.
+      subgroup: ''
+      subgroupDescription: ''
+      title: '새 태스크 생성'
+      description: '지정된 컬럼 하위에 새로운 태스크를 생성합니다. 담당자(assignee_id)를 지정할 수 있습니다.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      column_id:
+        custom: []
+        name: column_id
+        description: 'The ID of the column.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      column_id: 16
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      title:
+        custom: []
+        name: title
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      description:
+        custom: []
+        name: description
+        description: ''
+        required: false
+        example: 'Eius et animi quos velit et.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      assignee_id:
+        custom: []
+        name: assignee_id
+        description: 'The <code>id</code> of an existing record in the users table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      title: b
+      description: 'Eius et animi quos velit et.'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+    uri: 'api/tasks/{task_id}'
+    metadata:
+      custom: []
+      groupName: '태스크 관리 (Tasks)'
+      groupDescription: |-
+
+        칸반 보드의 핵심인 태스크(카드)를 생성, 수정, 삭제 및 이동 처리하는 API입니다.
+      subgroup: ''
+      subgroupDescription: ''
+      title: '태스크 내용 수정'
+      description: '태스크의 제목, 상세 설명, 그리고 담당자 정보를 업데이트합니다.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      task_id:
+        custom: []
+        name: task_id
+        description: 'The ID of the task.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      task_id: 16
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      title:
+        custom: []
+        name: title
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      description:
+        custom: []
+        name: description
+        description: ''
+        required: false
+        example: 'Eius et animi quos velit et.'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      assignee_id:
+        custom: []
+        name: assignee_id
+        description: 'The <code>id</code> of an existing record in the users table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      title: b
+      description: 'Eius et animi quos velit et.'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+    uri: 'api/tasks/{task_id}/move'
+    metadata:
+      custom: []
+      groupName: '태스크 관리 (Tasks)'
+      groupDescription: |-
+
+        칸반 보드의 핵심인 태스크(카드)를 생성, 수정, 삭제 및 이동 처리하는 API입니다.
+      subgroup: ''
+      subgroupDescription: ''
+      title: '태스크 이동 (Drag & Drop)'
+      description: |-
+        태스크를 다른 컬럼으로 이동시키거나, 동일 컬럼 내에서 순서(order)를 재배치합니다.
+        트랜잭션을 통해 다른 태스크들의 순서도 자동으로 조정됩니다.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      task_id:
+        custom: []
+        name: task_id
+        description: 'The ID of the task.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      task_id: 16
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      column_id:
+        custom: []
+        name: column_id
+        description: 'The <code>id</code> of an existing record in the columns table.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      order:
+        custom: []
+        name: order
+        description: 'Must be at least 1.'
+        required: true
+        example: 22
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      column_id: architecto
+      order: 22
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/tasks/{task_id}'
+    metadata:
+      custom: []
+      groupName: '태스크 관리 (Tasks)'
+      groupDescription: |-
+
+        칸반 보드의 핵심인 태스크(카드)를 생성, 수정, 삭제 및 이동 처리하는 API입니다.
+      subgroup: ''
+      subgroupDescription: ''
+      title: '태스크 삭제'
+      description: '불필요해진 태스크를 시스템에서 삭제합니다.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      task_id:
+        custom: []
+        name: task_id
+        description: 'The ID of the task.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      task_id: 16
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
