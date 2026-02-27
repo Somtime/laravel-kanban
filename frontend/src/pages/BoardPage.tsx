@@ -362,15 +362,13 @@ export function BoardPage() {
                   )}
                 </Droppable>
                 
-                {canManageBoard && (
-                  <Button 
-                    variant="ghost" 
-                    className="w-[100%] mt-4 justify-start text-muted-foreground hover:text-slate-900 border-dashed border"
-                    onClick={() => openNewTaskDialog(column.id)}
-                  >
-                    + 태스크 추가
-                  </Button>
-                )}
+                <Button 
+                  variant="ghost" 
+                  className="w-[100%] mt-4 justify-start text-muted-foreground hover:text-slate-900 border-dashed border"
+                  onClick={() => openNewTaskDialog(column.id)}
+                >
+                  + 태스크 추가
+                </Button>
               </div>
             ))}
           </div>
@@ -431,6 +429,7 @@ export function BoardPage() {
             
             {selectedTask && (() => {
               const currentAssignee = selectedTask.assignee || team.users?.find(u => u.id === selectedTask.assignee_id);
+              const currentCreator = selectedTask.creator || team.users?.find(u => u.id === selectedTask.creator_id);
               return (
               <div className="space-y-6 py-4">
                 <div className="flex items-center space-x-12 bg-slate-50 px-4 py-3 rounded-lg border border-slate-100 mb-2">
@@ -439,10 +438,10 @@ export function BoardPage() {
                     <div className="flex items-center space-x-2 h-7">
                       <Avatar className="h-6 w-6">
                         <AvatarFallback className="text-[10px] bg-slate-200 text-slate-600">
-                          {selectedTask.creator?.name?.substring(0,1).toUpperCase() || 'C'}
+                          {currentCreator?.name?.substring(0,1).toUpperCase() || 'C'}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="text-sm font-medium text-slate-700">{selectedTask.creator?.name || `ID ${selectedTask.creator_id}`}</span>
+                      <span className="text-sm font-medium text-slate-700">{currentCreator?.name || `ID ${selectedTask.creator_id}`}</span>
                     </div>
                   </div>
                   
@@ -459,7 +458,7 @@ export function BoardPage() {
                               </AvatarFallback>
                             </Avatar>
                             <span className="text-sm font-medium text-slate-700 hover:text-indigo-600 transition-colors">
-                              {currentAssignee?.name || '담당자 없음'}
+                              {currentAssignee?.name || '할당 안됨'}
                             </span>
                           </button>
                         </DropdownMenuTrigger>
@@ -513,7 +512,7 @@ export function BoardPage() {
                             {currentAssignee?.name?.substring(0,1).toUpperCase() || '?'}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="text-sm font-medium text-slate-700">{currentAssignee?.name || '담당자 없음'}</span>
+                        <span className="text-sm font-medium text-slate-700">{currentAssignee?.name || '할당 안됨'}</span>
                       </div>
                     )}
                   </div>
