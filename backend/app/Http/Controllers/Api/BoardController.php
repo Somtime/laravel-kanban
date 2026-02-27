@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTO\BoardCreateDTO;
 use App\Http\Controllers\Controller;
 use App\Models\Board;
 use App\Models\Team;
@@ -34,7 +35,8 @@ class BoardController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        $board = $this->boardService->createBoard($team, $request->user(), $validated);
+        $dto = new BoardCreateDTO($validated['name']);
+        $board = $this->boardService->createBoard($team, $request->user(), $dto);
 
         return response()->json($board, 201);
     }

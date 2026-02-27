@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTO\ColumnCreateDTO;
+use App\DTO\ColumnUpdateDTO;
 use App\Http\Controllers\Controller;
 use App\Models\Board;
 use App\Models\Column;
@@ -24,7 +26,8 @@ class ColumnController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        $column = $this->columnService->createColumn($board, $request->user(), $validated);
+        $dto = new ColumnCreateDTO($validated['name']);
+        $column = $this->columnService->createColumn($board, $request->user(), $dto);
 
         return response()->json($column, 201);
     }
@@ -39,7 +42,12 @@ class ColumnController extends Controller
             'order' => 'sometimes|required|integer|min:0',
         ]);
 
-        $updatedColumn = $this->columnService->updateColumn($column, $request->user(), $validated);
+        $dto = new ColumnUpdateDTO(
+            name: $validated['name'] ?? null,
+            order: $validated['order'] ?? null
+        );
+
+        $updatedColumn = $this->columnService->updateColumn($column, $request->user(), $dto);
 
         return response()->json($updatedColumn);
     }

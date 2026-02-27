@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\DTO\TaskCreateDTO;
+use App\DTO\TaskUpdateDTO;
+use App\DTO\TaskMoveDTO;
 use App\Http\Controllers\Controller;
 use App\Models\Column;
 use App\Models\Task;
@@ -26,7 +29,13 @@ class TaskController extends Controller
             'assignee_id' => 'nullable|exists:users,id',
         ]);
 
-        $task = $this->taskService->createTask($column, $request->user(), $validated);
+        $dto = new TaskCreateDTO(
+            title: $validated['title'],
+            description: $validated['description'] ?? null,
+            assignee_id: $validated['assignee_id'] ?? null
+        );
+
+        $task = $this->taskService->createTask($column, $request->user(), $dto);
 
         return response()->json($task->load('assignee'), 201);
     }
@@ -42,7 +51,13 @@ class TaskController extends Controller
             'assignee_id' => 'nullable|exists:users,id',
         ]);
 
-        $updatedTask = $this->taskService->updateTask($task, $request->user(), $validated);
+        $dto = new TaskUpdateDTO(
+            title: $validated['title'] ?? null,
+            description: $validated['description'] ?? null,
+            assignee_id: $validated['assignee_id'] ?? null
+        );
+
+        $updatedTask = $this->taskService->updateTask($task, $request->user(), $dto);
 
         return response()->json($updatedTask->load('assignee'));
     }
@@ -67,12 +82,12 @@ class TaskController extends Controller
             'order' => 'required|integer|min:1',
         ]);
 
-        $movedTask = $this->taskService->moveTask(
-            $task,
-            $request->user(),
-            (int)$validated['column_id'],
-            (int)$validated['order']
+        $dto = new TaskMoveDTO(
+            column_id: (int)$validated['column_id'],
+            order: (int)$validated['order']
         );
+
+        $movedTask = $this->taskService->moveTask($task, $request->user(), $dto);
 
         return response()->json($movedTask->load('assignee'));
     }

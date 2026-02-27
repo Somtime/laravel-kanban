@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTO\BoardCreateDTO;
 use App\Models\Team;
 use App\Models\User;
 use App\Models\Board;
@@ -37,9 +38,9 @@ class BoardService
     /**
      * 보드 생성 로직
      */
-    public function createBoard(Team $team, User $user, array $data): Board
+    public function createBoard(Team $team, User $user, BoardCreateDTO $dto): Board
     {
         $this->checkManagerAccess($team, $user);
-        return $this->boardRepository->createBoard($team, $data);
+        return $this->boardRepository->createBoard($team, $dto->toArray());
     }
 }

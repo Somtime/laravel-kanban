@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\DTO\TaskCreateDTO;
+use App\DTO\TaskUpdateDTO;
+use App\DTO\TaskMoveDTO;
 use App\Models\Board;
 use App\Models\Column;
 use App\Models\Task;
@@ -29,11 +32,13 @@ class TaskService
     /**
      * 새 태스크 생성
      */
-    public function createTask(Column $column, User $user, array $data): Task
+    public function createTask(Column $column, User $user, TaskCreateDTO $dto): Task
     {
         $this->checkTeamMemberAccess($column->board, $user);
 
         $maxOrder = $this->taskRepository->getMaxOrder($column);
+        
+        $data = $dto->toArray();
         $data['order'] = $maxOrder + 1;
         $data['creator_id'] = $user->id;
 
@@ -43,11 +48,11 @@ class TaskService
     /**
      * 태스크 수정
      */
-    public function updateTask(Task $task, User $user, array $data): Task
+    public function updateTask(Task $task, User $user, TaskUpdateDTO $dto): Task
     {
         $this->checkTeamMemberAccess($task->column->board, $user);
 
-        $this->taskRepository->updateTask($task, $data);
+        $this->taskRepository->updateTask($task, $dto->toArray());
 
         return $task->fresh();
     }
@@ -65,20 +70,20 @@ class TaskService
     /**
      * 태스크 드래그 앤 드롭 이동
      */
-    public function moveTask(Task $task, User $user, int $newColumnId, int $newOrder): Task
+    public function moveTask(Task $task, User $user, TaskMoveDTO $dto): Task
     {
         $this->checkTeamMemberAccess($task->column->board, $user);
 
         $oldColumnId = (int)$task->column_id;
         $oldOrder = (int)$task->order;
 
-        if ($newColumnId === $oldColumnId && $newOrder === $oldOrder) {
+        if ($dto->column_id === $oldColumnId && $dto->order === $oldOrder) {
             return $task; // 변경사항 없음
         }
 
         // 복잡한 다중 수정 작업이므로 Transaction 보장
-        DB::transaction(function () use ($task, $oldColumnId, $oldOrder, $newColumnId, $newOrder) {
-            $this->taskRepository->reorderTasksForMove($task, $oldColumnId, $oldOrder, $newColumnId, $newOrder);
+        DB::transaction(function () use ($task, $oldColumnId, $oldOrder, $dto) {
+            $this->taskRepository->reorderTasksForMove($task, $oldColumnId, $oldOrder, $dto->column_id, $dto->order);
         });
 
         return $task->fresh();

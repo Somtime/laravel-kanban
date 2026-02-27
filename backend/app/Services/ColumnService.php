@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\DTO\ColumnCreateDTO;
+use App\DTO\ColumnUpdateDTO;
 use App\Models\Board;
 use App\Models\Column;
 use App\Models\User;
@@ -27,12 +29,13 @@ class ColumnService
     /**
      * 새 컬럼 생성
      */
-    public function createColumn(Board $board, User $user, array $data): Column
+    public function createColumn(Board $board, User $user, ColumnCreateDTO $dto): Column
     {
         $this->checkManagerAccess($board, $user);
 
-        // 현재 보드의 가장 큰 order 값을 찾아 +1 적용
         $maxOrder = $this->columnRepository->getMaxOrder($board);
+        
+        $data = $dto->toArray();
         $data['order'] = $maxOrder + 1;
 
         return $this->columnRepository->createColumn($board, $data);
@@ -41,11 +44,11 @@ class ColumnService
     /**
      * 컬럼 수정
      */
-    public function updateColumn(Column $column, User $user, array $data): Column
+    public function updateColumn(Column $column, User $user, ColumnUpdateDTO $dto): Column
     {
         $this->checkManagerAccess($column->board, $user);
 
-        $this->columnRepository->updateColumn($column, $data);
+        $this->columnRepository->updateColumn($column, $dto->toArray());
 
         // 변경된 내용을 다시 모델에 반영하여 리턴
         return $column->fresh();
